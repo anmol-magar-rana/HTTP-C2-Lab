@@ -1,0 +1,29 @@
+{
+    "agent-123": [
+        {
+            "task_id": "1234",
+            "output": "world",
+            "received": "2026-02-02T22:33:31.380221"
+        },
+        {
+            "task_id": "1234",
+            "output": "world",
+            "received": "2026-02-02T22:33:43.432869"
+        },
+        {
+            "task_id": "1234",
+            "output": "world",
+            "received": "2026-02-02T22:33:52.495344"
+        },
+        {
+            "task_id": "1234",
+            "output": "world",
+            "received": "2026-02-02T22:33:59.507300"
+        },
+        {
+            "task_id": "1234",
+            "output": "world",
+            "received": "2026-02-02T22:34:08.535512"
+        }
+    ]
+}
