@@ -1,11 +1,45 @@
+"""
+C2 Agent Simulation / HTTP Client
+
+This file implements a minimal agent that communicates with the companion 
+Flask-based C2 server. The agent periodically checks in, retrieves tasks, 
+executes simple simulated commands, and uploads results back to the server.
+
+The purpose of this file is to demonstrate the command-and-control flow 
+for SOC learning, threat emulation labs, and detection engineering practice. As such,
+it is simple and does not execute real system commands. It focuses strictly on 
+demonstrating communication patterns and C2 mechanics. 
+All communication occurs inside the OS networking stack, no real network is involved.
+
+1. Check-In:
+    POST /api/v1/checkin
+    The agent announces that it is alive and provides its agent_id.
+
+2. Fetch Tasks:
+    GET /api/v1/tasks/<agent_id>
+    The agent retrieves any pending tasks that the operator has assigned.
+
+3. Execute Tasks:
+    The agent runs toy commands (e.g., "hello") inside perform_task().
+
+4. Send Results:
+    POST /api/v1/results
+    The agent uploads command output back to the server.
+
+Main Loop
+The agent_loop() function simulates continuous beaconing behavior found in 
+real-world implant/C2 frameworks. After each cycle, the agent sleeps for a 
+random period to mimic jitter and reduce detection likelihood.
+"""
+
 import time
-import uuid
 import requests
 from datetime import datetime, timezone
 import random
 
-SERVER = "http://127.0.0.1:8080"            # this ip loops back to any device used to run this code. no packets leave the network card, everything is internal.
-#AGENT_ID = f"agent-{uuid.uuid4().hex[:6]}"  # generates a random agent id each run
+# this ip loops back to any device used to run this code. 
+# no packets leave the network card, everything is internal.
+SERVER = "http://127.0.0.1:8080"            
 AGENT_ID = f"agent-123"
 
 # this function does not execute any commands. it simply returns descriptive output

@@ -1,10 +1,47 @@
+"""
+C2 Server Simulation, Flask REST API
+
+This file implements a lightweight command-and-control (C2) server used for
+SOC practice / red-team simulation labs / personal learning. This server is 
+simple and file-backed to keep the C2 workflow transparent studying the basics of c2. 
+It implements a set of REST endpoints that allow agents to:
+
+1. Check in with the server and announce their presence.
+2. Retrieve queued tasks/commands assigned to them.
+3. Upload execution results after completing tasks.
+
+Data Persistence
+All state is stored in two JSON files:
+
+1. tasks.json   : Maps agent_id to list of task objects. Each task contains { task_id, task, issued timestamp }.
+2. esults.json : Maps agent_id to list of result objects. Each result contains { task_id, output, received timestamp }.
+
+Endpoints
+1. POST /api/v1/checkin
+    Agents call this periodically to announce that they are alive.
+    Returns a status message and a UTC timestamp.
+
+2. GET /api/v1/tasks/<agent_id>
+    Returns all pending tasks for the specified agent.
+
+3. POST /api/v1/tasks
+    Allows an operator to assign a new task to an agent.
+    Expects JSON with { agent_id, task }.
+    Generates a unique task_id and stores it.
+
+4. POST /api/v1/results
+    Agents post execution results here.
+    Expects JSON with { agent_id, task_id, output }.
+"""
+
+
 from flask import Flask, request, jsonify
 import json
 import uuid
 from datetime import datetime, timezone
 
 
-app = Flask(__name__)           # initialize web server
+app = Flask(__name__)                     # initialize web server
 
 TASKS_FILE = "c2_Server/tasks.json"       # stores persistent simulation data
 RESULTS_FILE = "c2_Server/results.json"   # stores persistent simulation data
@@ -14,10 +51,8 @@ def load_tasks():
     # read tasks file to get tasks/commands
     try:
         with open(TASKS_FILE, "r") as f:
-            print('reached')
             return json.load(f)
     except:
-        print('failed')
         return {}
 
 def save_tasks(tasks):
@@ -62,7 +97,6 @@ def fetch_tasks(agent_id):
     # checks database if theres a task for this specific agent. if not, returns nothing
     tasks = load_tasks()
     agent_tasks = tasks.get(agent_id, [])
-    print(tasks)
     return jsonify({"tasks": agent_tasks})
 
 ###########################################################################
